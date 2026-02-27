@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assignments</title>
+</head>
+<body>
+    <h1>Assignments</h1>
+
+    <ul>
+        {% for id, title in assignments %}
+            <li>{{ id }} - {{ title }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="/">Back</a>
+</body>
+</html>
+<a href="/assignments">Refresh</a>

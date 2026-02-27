@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Problems</title>
+</head>
+<body>
+    <h1>Problems</h1>
+
+    <ul>
+        {% for id, title, topic, diff in problems %}
+            <li>{{ id }} - {{ title }} ({{ topic }}, {{ diff }})</li>
+        {% endfor %}
+    </ul>
+
+    <a href="/">Back</a>
+</body>
+</html>
+<form action="/link" method="post">
+    <input name="assignment_id" placeholder="Assignment ID">
+    <input name="problem_id" placeholder="Problem ID">
+    <button type="submit">Link</button>
+</form>
