@@ -67,7 +67,7 @@ def problems():
 
 @app.route("/link", methods=["POST"])
 def link():
-    """Links problems to assignments using the relational table.
+    """Links problems to assignments using the relational table(rows and columns).
     1. Receives assignment ID and title.
     2. Insert relationship
     3. Confirms linkage"""

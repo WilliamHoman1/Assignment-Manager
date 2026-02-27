@@ -1,4 +1,4 @@
-# Project - [Placeholder: UPDATE TITLE HERE!]
+# Project - Assignment Manager
 
 This repository is for the semester project. For each milestone, you should update the corresponding
 section with information about your project status. Do not complete README sections for future milestones or
@@ -8,20 +8,31 @@ an award of 0 points as determined by the instructor.
 
 ## Milestone 1
 
-Update this section to describe your project for milestone 1 and complete the following sections. If your project is
-using assets, be sure to keep the citations, sources, and resources section updated.
+My project for milestone one is the framework for an assignment manager for computer science professors at Georgia 
+Highlands College. This project will communicate with GitLab to receive repository's, build assignments, then send them
+out to students to complete through PyCharm. This goal for this project is to increase the efficiency at which problem sets 
+are created as well as group together topics that will be useful to learn. I will be creating the assignment database, 
+generator, and GUI that will result in easy accessibility for the user to carry out the tasks they want.
 
 ### Current Progress
 
-Update this section to describe the current progress of your project.
+The current progress of my project is the framework. I am using SQLite 3 to create the database at which files
+like build_assignment and insert_problems will communicate with. When I receive the repository for the problems I will be 
+implementing, the database will be more complete with what the professor will be able to choose from. I have also started
+working on the GUI that will be used by the user themselves. After doing some research I have created a local web app using
+html, however I am considering moving this to a live website but not entirely sure.
 
 ### Challenges
 
-Update this section to describe the challenges for your project at this stage.
+The challenges I have faced so far have been learning the different things needed for this project like, SQLite 3 and Html.
+Another issue I have faced is making sure everything is connected, when creating the database, sometimes different parts of it 
+were not connecting therefore it created an empty database. Once I figured this out, the sample problems started populating. 
 
 ### Future Directions
 
-What are your plans for the next milestone?
+My plans for the next milestone is to start playing around with incorporating the repository problems with my program and doing 
+research on how to do so. I also want to look into maybe moving my web application into a live website. Along with 
+that, I will be designing and improving the look and functionality of the GUI as well.
 
 
 
