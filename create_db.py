@@ -1,6 +1,7 @@
 import sqlite3
 
 def create_database(db_name='assignments.db'):
+    """Creates sqlite3 database"""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
 

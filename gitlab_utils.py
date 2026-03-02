@@ -1,6 +1,8 @@
 import gitlab
 import os
 
+
+# Messing around with gitlab integration , still in progress
 def get_gitlab_client():
     token = os.getenv("GITLAB_TOKEN")
     return gitlab.Gitlab("https://gitlab.com", private_token=token)

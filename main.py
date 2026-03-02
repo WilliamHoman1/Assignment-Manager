@@ -3,6 +3,7 @@ from insert_problems import insert_sample_problems
 from build_assignment import create_assignment
 from export_assignment import export_assignment
 
+#Creates database w sample problems
 
 def main():
     create_database()
