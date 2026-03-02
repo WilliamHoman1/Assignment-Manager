@@ -49,7 +49,7 @@ import os
 def problems():
     base_dir = "cs2-problem-repo"  # problem directory
 
-    # List directories inside problems/
+    # List directories inside problems file
     if not os.path.exists(base_dir):
         return "No problems folder found."
 
