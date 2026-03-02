@@ -2,21 +2,56 @@
 <html>
 <head>
     <title>Problems</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            padding: 8px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+            border-radius: 4px;
+        }
+        a {
+            text-decoration: none;
+            color: #0066cc;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
     <h1>Problems</h1>
 
+    <!-- Dynamic problem list (local folders) -->
     <ul>
-        {% for id, title, topic, diff in problems %}
-            <li>{{ id }} - {{ title }} ({{ topic }}, {{ diff }})</li>
+        {% for p in problems %}
+            <li>
+                {{ p.name }} ({{ p.path }})
+            </li>
         {% endfor %}
     </ul>
 
-    <a href="/">Back</a>
+    <!-- Link assignment to problem -->
+    <h3>Link Problem to Assignment</h3>
+    <form action="/link" method="post">
+        <input name="assignment_id" placeholder="Assignment ID" required>
+        <input name="problem_id" placeholder="Problem ID or Path" required>
+        <button type="submit">Link</button>
+    </form>
+
+    <p><a href="/">Back</a></p>
+</div>
 </body>
 </html>
-<form action="/link" method="post">
-    <input name="assignment_id" placeholder="Assignment ID">
-    <input name="problem_id" placeholder="Problem ID">
-    <button type="submit">Link</button>
-</form>

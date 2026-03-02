@@ -24,41 +24,30 @@
             text-decoration: none;
             color: #0066cc;
         }
-        .flash {
-            background: #d4edda;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Assignment Manager</h1>
-        <p>Professor dashboard</p>
-        <!-- Flash Success message -->
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <div class="flash">
-              {% for message in messages %}
-                <p>{{ message }}</p>
-              {% endfor %}
-            </div>
-          {% endif %}
-        {% endwith %}
-        <!-- View assignments -->
-        <div class="card">
-            <h3>View Assignments</h3>
-            <p><a href="/assignments">Go to assignments</a></p>
-        </div>
-        <!-- Create assignment form -->
-        <div class="card">
-            <h3>Create Assignment</h3>
-            <form action="/create" method="post">
-                <input name="title" placeholder="Assignment Title" required>
-                <button type="submit">Create</button>
-            </form>
-        </div>
+<div class="container">
+    <h1>Assignment Manager</h1>
+    <p>Professor dashboard</p>
+
+    <div class="card">
+        <h3>View Assignments</h3>
+        <p><a href="/assignments">Go to assignments</a></p>
     </div>
+
+    <div class="card">
+        <h3>View Problems</h3>
+        <p><a href="/problems">Go to problems</a></p>
+    </div>
+
+    <div class="card">
+        <h3>Create Assignment</h3>
+        <form action="/create" method="post">
+            <input name="title" placeholder="Assignment Title" required>
+            <button type="submit">Create</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
