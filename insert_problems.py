@@ -22,7 +22,7 @@ import sqlite3
    # insert_sample_problems()
 
 
-    # Insert problems from gitlab API, still messing around with
+    # Insert problems from gitlab API
 
 import gitlab
 import sqlite3
