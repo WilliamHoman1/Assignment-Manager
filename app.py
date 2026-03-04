@@ -1,14 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3
-import os
-import uuid
+import os # Interact with operating system
+import uuid # Generates unique ID's for assignments to differentiate
 from build_assignment import create_assignment
 
-# Flask setup
+# Flask (website) setup
 app = Flask(__name__)
 app.secret_key = "dev-secret-key"
 
+# Path to directory of database
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+# Path to database
 DB_PATH = os.path.join(BASE_DIR, "assignments.db")
 
 
@@ -18,13 +20,13 @@ def home():
     return render_template("index.html")
 
 
-# View assignments (use rowid or id)
+# View assignments (use row id or id)
 @app.route("/assignments")
 def assignments():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
-    # Use rowid (auto number) instead of long UUID
+    # Use row id (auto number) instead of long UUID
     c.execute("SELECT rowid, title FROM assignments")
     rows = c.fetchall()
 
@@ -82,6 +84,16 @@ def link():
     conn.close()
 
     return "Linked!"
+
+@app.route("/problems")
+def show_problems():
+    conn = sqlite3.connect("assignments.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM problems")
+    problems = cursor.fetchall()
+    conn.close()
+
+    return render_template("problems.html", problems=problems)
 
 
 if __name__ == "__main__":

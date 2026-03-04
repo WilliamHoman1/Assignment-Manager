@@ -2,75 +2,117 @@ import sqlite3
 
 # Template for inserting sample problems into database, gets database set up
 
-def insert_sample_problems(db_name='assignments.db'):
-    conn = sqlite3.connect(db_name)
-    c = conn.cursor()
+#def insert_sample_problems(db_name='assignments.db'):
+   # conn = sqlite3.connect(db_name)
+   # c = conn.cursor()
 
-    sample_problems = [
-        ('P001', 'For Loop Basics', 'for loop', 'easy', 'python', 'instructions/P001.md', 'tests/P001_tests.py'),
-        ('P002', 'While Loop Practice', 'while loop', 'medium', 'python', 'instructions/P002.md', 'tests/P002_tests.py'),
-        ('P003', 'List Operations', 'lists', 'medium', 'python', 'instructions/P003.md', 'tests/P003_tests.py')
-    ]
+   # sample_problems = [
+   #     ('P001', 'For Loop Basics', 'for loop', 'easy', 'python', 'instructions/P001.md', 'tests/P001_tests.py'),
+   #     ('P002', 'While Loop Practice', 'while loop', 'medium', 'python', 'instructions/P002.md', 'tests/P002_tests.py'),
+    #    ('P003', 'List Operations', 'lists', 'medium', 'python', 'instructions/P003.md', 'tests/P003_tests.py')
+   # ]
 
-    c.executemany('INSERT OR IGNORE INTO problems VALUES (?,?,?,?,?,?,?)', sample_problems)
+  #  c.executemany('INSERT OR IGNORE INTO problems VALUES (?,?,?,?,?,?,?)', sample_problems)
 
-    conn.commit()
-    conn.close()
-    print("Sample problems inserted.")
-
-if __name__ == "__main__":
-    insert_sample_problems()
+  #  conn.commit()
+  #  conn.close()
+   # print("Sample problems inserted.")
+#
+#if __name__ == "__main__":
+   # insert_sample_problems()
 
 
     # Insert problems from gitlab API, still messing around with
 
-#import sqlite3
-#import os
+import gitlab
+import sqlite3
+import json
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-#def insert_problems_from_repo(
-    #db_name='assignments.db',
-    #base_dir='/Users/williamhoman/PycharmProjects/Project_wazevedo/cs2-problem-repo/PS_Lab1_v2_zmielko-main'
-#):
-  #  conn = sqlite3.connect(db_name)
-   # c = conn.cursor()
 
- #   src_dir = os.path.join(base_dir, "src")
-  #  tests_dir = os.path.join(base_dir, "tests")
+# --------------------------------------------------
+# GitLab Client
+# --------------------------------------------------
 
-  #  print(f"Looking for src: {src_dir}")
+def get_gitlab_client():
+    token = os.getenv("GITLAB_TOKEN")
+    print("Token:", token)  # debug inside function
+    if not token:
+        raise Exception("GITLAB_TOKEN not set.")
+    return gitlab.Gitlab("https://gitlab.com", private_token=token)
+# --------------------------------------------------
+# GitLab Sync (Matches DB Schema)
+# --------------------------------------------------
 
-   # for filename in os.listdir(src_dir):
-    #    if not filename.endswith(".py"):
-      #      continue
+def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name="assignments.db"):
+    gl = get_gitlab_client()
+    project = gl.projects.get(project_id)
 
-      #  problem_id = filename.replace(".py", "")
-      #  instructions_path = os.path.join(src_dir, filename)
+    items = project.repository_tree(recursive=True, get_all=True)
 
-      #  test_filename = f"test_{filename}"
-       # tests_path = os.path.join(tests_dir, test_filename)
-#
-     #   if not os.path.exists(tests_path):
-       #     tests_path = ""
+    conn = sqlite3.connect(db_name)
+    cursor = conn.cursor()
 
-       # title = problem_id.replace("_", " ").title()
+    synced = 0
 
-      #  c.execute("""
-        #    INSERT OR IGNORE INTO problems
-        #    (id, title, topic, difficulty, language, instructions, unit_tests)
-        #    VALUES (?, ?, ?, ?, ?, ?, ?)
-       # """, (
-    #        problem_id,
-     #       title,
-      #      "",
-       #     "",
-       #     "python",
-       #     instructions_path,
-        #    tests_path
-       # ))
+    for item in items:
+        print(item)
+        if item["type"] == "blob" and item["name"] == metadata_filename:
 
-   # conn.commit()
-   # conn.close()
-   # print("Problems loaded.")
+            file = project.files.get(file_path=item["path"], ref="main")
+            content = file.decode().decode("utf-8")
 
-#if __name__ == "__main__":
-   # insert_problems_from_repo()
+            try:
+                metadata = json.loads(content)
+            except Exception as e:
+                print(f"Skipping {item['path']} — invalid JSON: {e}")
+                continue
+
+            # Map metadata to DB schema
+            problem_id = metadata.get("id")
+            title = metadata.get("title")
+            topic = metadata.get("topic")
+            difficulty = metadata.get("difficulty")
+            language = metadata.get("language")
+            instructions = metadata.get("instructions")
+            unit_tests = metadata.get("unit_tests")
+
+            if not problem_id or not title:
+                print(f"Skipping {item['path']} — missing id or title")
+                continue
+
+            cursor.execute("""
+                INSERT OR IGNORE INTO problems
+                (id, title, topic, difficulty, language, instructions, unit_tests)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (
+                problem_id,
+                title,
+                topic,
+                difficulty,
+                language,
+                instructions,
+                unit_tests
+            ))
+
+            synced += 1
+
+    conn.commit()
+    conn.close()
+
+    print(f"Synced {synced} problems from GitLab.")
+
+
+# --------------------------------------------------
+# CLI Entry (Manual Run)
+# --------------------------------------------------
+
+if __name__ == "__main__":
+    project_id = input("GitLab Project ID: ").strip()
+
+    if not project_id:
+        print("Project ID required.")
+    else:
+        sync_gitlab_problems(project_id)

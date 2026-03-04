@@ -1,6 +1,8 @@
 import sqlite3
 
 def create_assignment(assignment_id, title, topics, db_name='assignments.db'):
+    """Creates assignment that will be inserted into database, assignment yet to be connected
+     to custom problem set."""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
 

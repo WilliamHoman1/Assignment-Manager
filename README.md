@@ -32,7 +32,8 @@ were not connecting therefore it created an empty database. Once I figured this 
 
 My plans for the next milestone is to start playing around with incorporating the repository problems with my program and doing 
 research on how to do so. I also want to look into maybe moving my web application into a live website. Along with 
-that, I will be designing and improving the look and functionality of the GUI as well.
+that, I will be designing and improving the look and functionality of the GUI as well. Need to connect problem set labs into database
+and GUI.
 
 
 

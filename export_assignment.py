@@ -3,6 +3,10 @@ import os
 import sqlite3
 
 def export_assignment(assignment_id, db_name='assignments.db'):
+    """Template for bundling assignment into database along with problems
+
+    Function: Combining desired assignments into problem set using assignment ID's
+    Does not explicitly do anything currently, just here as setup for later."""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
 

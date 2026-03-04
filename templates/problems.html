@@ -1,3 +1,4 @@
+<!-- templates/problems.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,52 +7,108 @@
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
+            background-color: #f5f5f5;
         }
+
         .container {
             max-width: 800px;
             margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
         }
-        h1 {
+
+        h1, h3 {
             color: #333;
         }
+
         ul {
             list-style: none;
             padding: 0;
         }
+
         li {
-            padding: 8px;
-            border: 1px solid #ccc;
-            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-top: 8px;
             border-radius: 4px;
+            background-color: #fafafa;
         }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input, select {
+            padding: 8px;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #004999;
+        }
+
         a {
             text-decoration: none;
             color: #0066cc;
         }
+
+        .back-link {
+            margin-top: 20px;
+            display: block;
+        }
     </style>
 </head>
+
 <body>
 <div class="container">
-    <h1>Problems</h1>
 
-    <!-- Dynamic problem list (local folders) -->
+    <h1>Available Problems</h1>
+
+    <!-- Problem List -->
     <ul>
         {% for p in problems %}
             <li>
-                {{ p.name }} ({{ p.path }})
+                <strong>{{ p.name }}</strong><br>
+                <small>{{ p.repo_path }}</small>
             </li>
+        {% else %}
+            <li>No problems found.</li>
         {% endfor %}
     </ul>
 
-    <!-- Link assignment to problem -->
     <h3>Link Problem to Assignment</h3>
+
     <form action="/link" method="post">
-        <input name="assignment_id" placeholder="Assignment ID" required>
-        <input name="problem_id" placeholder="Problem ID or Path" required>
-        <button type="submit">Link</button>
+        <input name="assignment_id" type="number" placeholder="Assignment ID" required>
+
+        <select name="problem_id" required>
+            <option value="">Select a Problem</option>
+            {% for p in problems %}
+                <option value="{{ p.id }}">
+                    {{ p.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Link Problem</button>
     </form>
 
-    <p><a href="/">Back</a></p>
+    <a href="/" class="back-link">← Back to Home</a>
+
 </div>
 </body>
 </html>
+
+

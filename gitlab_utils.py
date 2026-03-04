@@ -4,8 +4,10 @@ import os
 
 # Messing around with gitlab integration , still in progress
 def get_gitlab_client():
+    """Enables communication with Gitlab API"""
     token = os.getenv("GITLAB_TOKEN")
     return gitlab.Gitlab("https://gitlab.com", private_token=token)
+
 
 def list_problem_folders(project_path, repo_path='problems', ref='main'):
     """
