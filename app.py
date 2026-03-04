@@ -17,6 +17,7 @@ DB_PATH = os.path.join(BASE_DIR, "assignments.db")
 # Home
 @app.route("/")
 def home():
+    """Calls index.html"""
     return render_template("index.html")
 
 
