@@ -52,35 +52,32 @@ def create():
 @app.route("/problems")
 def problems():
     conn = sqlite3.connect("assignments.db")
-    conn.row_factory = sqlite3.Row  # allows dict-style access
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT id, title, topic, difficulty, language, instructions
+        SELECT id, title, topic, difficulty, language, instructions, position
         FROM problems
-        ORDER BY difficulty, title
+        ORDER BY position ASC
     """)
 
-    problems = cursor.fetchall()
+    rows = cursor.fetchall()
     conn.close()
 
-    # Add preview (first 250 characters)
-    formatted_problems = []
-    for p in problems:
-        preview = ""
-        if p["instructions"]:
-            preview = p["instructions"][:250] + "..."
-
-        formatted_problems.append({
-            "id": p["id"],
-            "title": p["title"],
-            "topic": p["topic"],
-            "difficulty": p["difficulty"],
-            "language": p["language"],
-            "preview": preview
+    # prepare for template
+    problems = []
+    for row in rows:
+        problems.append({
+            "id": row["id"],
+            "title": row["title"],
+            "topic": row["topic"],
+            "difficulty": row["difficulty"],
+            "language": row["language"],
+            "position": row["position"],
+            "preview": row["instructions"][:300] + "..." if row["instructions"] else ""
         })
 
-    return render_template("problems.html", problems=formatted_problems)
+    return render_template("problems.html", problems=problems)
 
 # Link assignment to problem
 @app.route("/link", methods=["POST"])
@@ -118,7 +115,7 @@ def view_problem(problem_id):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT id, title, topic, difficulty, language, instructions, unit_tests
+        SELECT id, title, topic, difficulty, language, instructions
         FROM problems
         WHERE id = ?
     """, (problem_id,))

@@ -78,6 +78,7 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
             language = metadata.get("language")
 
             instructions_path = metadata.get("instructions")
+            position = metadata.get("position", 0)
 
             try:
                 code_file = project.files.get(file_path=instructions_path, ref="main")
@@ -94,8 +95,8 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
 
             cursor.execute("""
                 INSERT OR REPLACE INTO problems
-                (id, title, topic, difficulty, language, instructions, unit_tests)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                (id, title, topic, difficulty, language, instructions, unit_tests, position)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 problem_id,
                 title,
@@ -103,7 +104,8 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
                 difficulty,
                 language,
                 instructions,
-                unit_tests
+                unit_tests,
+                position
             ))
 
             synced += 1
@@ -113,6 +115,9 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
 
     print(f"Synced {synced} problems from GitLab.")
 
+
+# REMOVE THIS LATER
+# TESTS PROBLEM EXISTENCE
 import sqlite3
 
 conn = sqlite3.connect("assignments.db")
@@ -123,6 +128,22 @@ for row in cursor.fetchall():
     print(row)
 
 conn.close()
+
+import sqlite3
+
+conn = sqlite3.connect("assignments.db")
+cursor = conn.cursor()
+
+# Set positions for ordering
+cursor.execute("UPDATE problems SET position = 1 WHERE id = 'problem_one';")
+cursor.execute("UPDATE problems SET position = 2 WHERE id = 'problem_two';")
+cursor.execute("UPDATE problems SET position = 3 WHERE id = 'problem_three';")
+cursor.execute("UPDATE problems SET position = 4 WHERE id = 'problem_four';")
+
+conn.commit()
+conn.close()
+
+print("Positions updated.")
 
 #  Project ID : 79896930
 if __name__ == "__main__":
