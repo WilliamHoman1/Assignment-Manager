@@ -55,10 +55,11 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
 
     synced = 0
 
+    # inside sync_gitlab_problems
+
     for item in items:
         print(item)
 
-        # look for json metadata files
         if item["type"] == "blob" and item["name"].endswith(".json"):
 
             file = project.files.get(file_path=item["path"], ref="main")
@@ -70,19 +71,17 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
                 print(f"Skipping {item['path']} — invalid JSON: {e}")
                 continue
 
-            # map metadata to DB schema
             problem_id = metadata.get("id")
             title = metadata.get("title")
             topic = metadata.get("topic")
             difficulty = metadata.get("difficulty")
             language = metadata.get("language")
 
-            # FIX: instructions now store code, not file path
             instructions_path = metadata.get("instructions")
 
             try:
-                file = project.files.get(file_path=instructions_path, ref="main")
-                instructions = file.decode().decode("utf-8")
+                code_file = project.files.get(file_path=instructions_path, ref="main")
+                instructions = code_file.decode().decode("utf-8")
             except Exception as e:
                 print(f"Could not load instructions for {problem_id}: {e}")
                 instructions = ""
@@ -113,6 +112,17 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
     conn.close()
 
     print(f"Synced {synced} problems from GitLab.")
+
+import sqlite3
+
+conn = sqlite3.connect("assignments.db")
+cursor = conn.cursor()
+
+cursor.execute("SELECT id, title, LENGTH(instructions) FROM problems;")
+for row in cursor.fetchall():
+    print(row)
+
+conn.close()
 
 #  Project ID : 79896930
 if __name__ == "__main__":
