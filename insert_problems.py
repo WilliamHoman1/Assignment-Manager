@@ -32,9 +32,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# --------------------------------------------------
 # GitLab Client
-# --------------------------------------------------
 
 def get_gitlab_client():
     token = os.getenv("GITLAB_TOKEN")
@@ -42,14 +40,14 @@ def get_gitlab_client():
     if not token:
         raise Exception("GITLAB_TOKEN not set.")
     return gitlab.Gitlab("https://gitlab.com", private_token=token)
-# --------------------------------------------------
+
 # GitLab Sync (Matches DB Schema)
-# --------------------------------------------------
 
 def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name="assignments.db"):
     gl = get_gitlab_client()
     project = gl.projects.get(project_id)
 
+    # get all files (pagination-safe)
     items = project.repository_tree(recursive=True, get_all=True)
 
     conn = sqlite3.connect(db_name)
@@ -59,7 +57,9 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
 
     for item in items:
         print(item)
-        if item["type"] == "blob" and item["name"] == metadata_filename:
+
+        # look for json metadata files
+        if item["type"] == "blob" and item["name"].endswith(".json"):
 
             file = project.files.get(file_path=item["path"], ref="main")
             content = file.decode().decode("utf-8")
@@ -70,13 +70,23 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
                 print(f"Skipping {item['path']} — invalid JSON: {e}")
                 continue
 
-            # Map metadata to DB schema
+            # map metadata to DB schema
             problem_id = metadata.get("id")
             title = metadata.get("title")
             topic = metadata.get("topic")
             difficulty = metadata.get("difficulty")
             language = metadata.get("language")
-            instructions = metadata.get("instructions")
+
+            # FIX: instructions now store code, not file path
+            instructions_path = metadata.get("instructions")
+
+            try:
+                file = project.files.get(file_path=instructions_path, ref="main")
+                instructions = file.decode().decode("utf-8")
+            except Exception as e:
+                print(f"Could not load instructions for {problem_id}: {e}")
+                instructions = ""
+
             unit_tests = metadata.get("unit_tests")
 
             if not problem_id or not title:
@@ -84,7 +94,7 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
                 continue
 
             cursor.execute("""
-                INSERT OR IGNORE INTO problems
+                INSERT OR REPLACE INTO problems
                 (id, title, topic, difficulty, language, instructions, unit_tests)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             """, (
@@ -104,10 +114,6 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
 
     print(f"Synced {synced} problems from GitLab.")
 
-
-# --------------------------------------------------
-# CLI Entry (Manual Run)
-# --------------------------------------------------
 
 if __name__ == "__main__":
     project_id = input("GitLab Project ID: ").strip()

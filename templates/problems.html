@@ -1,8 +1,7 @@
-<!-- templates/problems.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Problems</title>
+    <title>Available Problems</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,82 +10,109 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: auto;
             background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .problem-card {
+            border: 1px solid #e0e0e0;
             padding: 20px;
+            margin-bottom: 15px;
             border-radius: 8px;
-            box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
-        }
-
-        h1, h3 {
-            color: #333;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            padding: 10px;
-            border: 1px solid #ddd;
-            margin-top: 8px;
-            border-radius: 4px;
             background-color: #fafafa;
         }
 
-        form {
-            margin-top: 20px;
+        .problem-card h3 {
+            margin: 0 0 10px 0;
         }
 
-        input, select {
-            padding: 8px;
-            margin-right: 10px;
-            margin-top: 5px;
+        .meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
         }
 
-        button {
-            padding: 8px 12px;
+        .difficulty-easy { color: green; font-weight: bold; }
+        .difficulty-medium { color: orange; font-weight: bold; }
+        .difficulty-hard { color: red; font-weight: bold; }
+
+        .preview {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 6px 10px;
             background-color: #0066cc;
             color: white;
-            border: none;
+            text-decoration: none;
             border-radius: 4px;
-            cursor: pointer;
+            font-size: 13px;
         }
 
-        button:hover {
+        .btn:hover {
             background-color: #004999;
         }
 
-        a {
-            text-decoration: none;
-            color: #0066cc;
+        select, input, button {
+            padding: 8px;
+            margin-top: 10px;
+        }
+
+        form {
+            margin-top: 30px;
         }
 
         .back-link {
-            margin-top: 20px;
+            margin-top: 30px;
             display: block;
         }
     </style>
 </head>
-
 <body>
 <div class="container">
 
     <h1>Available Problems</h1>
 
-    <!-- Problem List -->
-    <ul>
-        {% for p in problems %}
-            <li>
-                <strong>{{ p.name }}</strong><br>
-                <small>{{ p.repo_path }}</small>
-            </li>
-        {% else %}
-            <li>No problems found.</li>
-        {% endfor %}
-    </ul>
+    {% for p in problems %}
+        <div class="problem-card">
+
+            <h3>{{ p.title }}</h3>
+
+            <div class="meta">
+                Topic: {{ p.topic }} |
+                Language: {{ p.language }} |
+                Difficulty:
+                <span class="difficulty-{{ p.difficulty }}">
+                    {{ p.difficulty|capitalize }}
+                </span>
+            </div>
+
+            <div class="preview">
+                {{ p.preview }}
+            </div>
+
+            <div class="actions">
+                <a href="/problem/{{ p.id }}" class="btn">View Full Problem</a>
+            </div>
+
+        </div>
+    {% else %}
+        <p>No problems found.</p>
+    {% endfor %}
 
     <h3>Link Problem to Assignment</h3>
 
@@ -97,7 +123,7 @@
             <option value="">Select a Problem</option>
             {% for p in problems %}
                 <option value="{{ p.id }}">
-                    {{ p.name }}
+                    {{ p.title }}
                 </option>
             {% endfor %}
         </select>
@@ -110,5 +136,4 @@
 </div>
 </body>
 </html>
-
 

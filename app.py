@@ -49,22 +49,38 @@ def create():
     return redirect(url_for('assignments'))
 
 
-# View problems (local)
 @app.route("/problems")
 def problems():
-    base_dir = os.path.join(BASE_DIR, "cs2-problem-repo")
+    conn = sqlite3.connect("assignments.db")
+    conn.row_factory = sqlite3.Row  # allows dict-style access
+    cursor = conn.cursor()
 
-    if not os.path.exists(base_dir):
-        return "No problems folder found."
+    cursor.execute("""
+        SELECT id, title, topic, difficulty, language, instructions
+        FROM problems
+        ORDER BY difficulty, title
+    """)
 
-    folders = []
-    for name in os.listdir(base_dir):
-        path = os.path.join(base_dir, name)
-        if os.path.isdir(path):
-            folders.append({"name": name, "path": path})
+    problems = cursor.fetchall()
+    conn.close()
 
-    return render_template("problems.html", problems=folders)
+    # Add preview (first 250 characters)
+    formatted_problems = []
+    for p in problems:
+        preview = ""
+        if p["instructions"]:
+            preview = p["instructions"][:250] + "..."
 
+        formatted_problems.append({
+            "id": p["id"],
+            "title": p["title"],
+            "topic": p["topic"],
+            "difficulty": p["difficulty"],
+            "language": p["language"],
+            "preview": preview
+        })
+
+    return render_template("problems.html", problems=formatted_problems)
 
 # Link assignment to problem
 @app.route("/link", methods=["POST"])
@@ -95,6 +111,25 @@ def show_problems():
 
     return render_template("problems.html", problems=problems)
 
+@app.route("/problem/<problem_id>")
+def view_problem(problem_id):
+    conn = sqlite3.connect("assignments.db")
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id, title, topic, difficulty, language, instructions, unit_tests
+        FROM problems
+        WHERE id = ?
+    """, (problem_id,))
+
+    problem = cursor.fetchone()
+    conn.close()
+
+    if not problem:
+        return "Problem not found.", 404
+
+    return render_template("view_problem.html", problem=problem)
 
 if __name__ == "__main__":
     app.run(debug=True)
