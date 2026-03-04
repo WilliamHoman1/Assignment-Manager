@@ -1,5 +1,5 @@
 import sqlite3
-
+# OLD
 # Template for inserting sample problems into database, gets database set up
 
 #def insert_sample_problems(db_name='assignments.db'):
