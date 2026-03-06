@@ -120,7 +120,7 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
 # TESTS PROBLEM EXISTENCE
 import sqlite3
 
-conn = sqlite3.connect("assignments.db")
+conn = sqlite3.connect("../data/assignments.db")
 cursor = conn.cursor()
 
 cursor.execute("SELECT id, title, LENGTH(instructions) FROM problems;")
@@ -131,7 +131,7 @@ conn.close()
 
 import sqlite3
 
-conn = sqlite3.connect("assignments.db")
+conn = sqlite3.connect("../data/assignments.db")
 cursor = conn.cursor()
 
 # Set positions for ordering
@@ -144,7 +144,7 @@ conn.commit()
 conn.close()
 
 print("Positions updated.")
-
+# test
 #  Project ID : 79896930
 if __name__ == "__main__":
     project_id = input("GitLab Project ID: ").strip()

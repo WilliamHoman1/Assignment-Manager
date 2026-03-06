@@ -1,0 +1,8 @@
+from textual.app import App
+from tui.screens.menu_screen import MenuScreen
+
+
+class AssignmentManagerApp(App):
+
+    def on_mount(self):
+        self.push_screen(MenuScreen())

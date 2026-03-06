@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3
 import os # Interact with operating system
 import uuid # Generates unique ID's for assignments to differentiate
-from build_assignment import create_assignment
+from services.assignment_service import create_assignment
 
 # Flask (website) setup
 app = Flask(__name__)
@@ -52,7 +52,7 @@ def create():
 
 @app.route("/problems")
 def problems():
-    conn = sqlite3.connect("assignments.db")
+    conn = sqlite3.connect("../data/assignments.db")
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
@@ -101,7 +101,7 @@ def link():
 
 @app.route("/problems")
 def show_problems():
-    conn = sqlite3.connect("assignments.db")
+    conn = sqlite3.connect("../data/assignments.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM problems")
     problems = cursor.fetchall()
@@ -111,7 +111,7 @@ def show_problems():
 
 @app.route("/problem/<problem_id>")
 def view_problem(problem_id):
-    conn = sqlite3.connect("assignments.db")
+    conn = sqlite3.connect("../data/assignments.db")
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
