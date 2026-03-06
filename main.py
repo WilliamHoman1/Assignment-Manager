@@ -1,6 +1,6 @@
 from scripts.create_db import create_database
 #from scripts.insert_problems import insert_sample_problems
-from services.assignment_service import create_assignment
+#from services.assignment_service import create_assignment
 #from services.database_service import export_assignment
 
 # Creates database w sample problems
@@ -14,7 +14,11 @@ from services.assignment_service import create_assignment
 
 #if __name__ == "__main__":
     #main()
+# Run in terminal with python3 main.py
+# cd ~/PycharmProjects/Project_wazevedo
+# python3 main.py
 
+from scripts.create_db import create_database
 from tui.app import AssignmentManagerApp
 
 if __name__ == "__main__":

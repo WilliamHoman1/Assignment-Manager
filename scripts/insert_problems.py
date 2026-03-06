@@ -30,7 +30,12 @@ import json
 import os
 from dotenv import load_dotenv
 load_dotenv()
+import sqlite3
 
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "data", "assignments.db")
 
 # GitLab Client
 
@@ -43,7 +48,7 @@ def get_gitlab_client():
 
 # GitLab Sync (Matches DB Schema)
 
-def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name="assignments.db"):
+def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=DB_PATH):
     gl = get_gitlab_client()
     project = gl.projects.get(project_id)
 
@@ -118,9 +123,9 @@ def sync_gitlab_problems(project_id, metadata_filename="metadata.json", db_name=
 
 # REMOVE THIS LATER
 # TESTS PROBLEM EXISTENCE
-import sqlite3
 
-conn = sqlite3.connect("../data/assignments.db")
+
+conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 
 cursor.execute("SELECT id, title, LENGTH(instructions) FROM problems;")
@@ -131,7 +136,7 @@ conn.close()
 
 import sqlite3
 
-conn = sqlite3.connect("../data/assignments.db")
+conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 
 # Set positions for ordering

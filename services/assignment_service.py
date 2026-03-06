@@ -1,34 +1,92 @@
 import sqlite3
+import gitlab
+import os
 
-def create_assignment(assignment_id, title, topics, db_name='assignments.db'):
-    """Creates assignment that will be inserted into database, assignment yet to be connected
-     to custom problem set."""
-    conn = sqlite3.connect(db_name)
-    c = conn.cursor()
 
-    # Insert new assignment
-    c.execute(
-        "INSERT OR IGNORE INTO assignments (id, title) VALUES (?, ?)",
-        (assignment_id, title)
-    )
+class AssignmentService:
 
-    problem_ids = []
+    def __init__(self, db_name="data/assignments.db"):
 
-    # Only search if topics exist
-    if topics:
-        placeholders = ','.join('?' for _ in topics)
-        query = f"SELECT id FROM problems WHERE topic IN ({placeholders})"
-        c.execute(query, topics)
-        problem_ids = [row[0] for row in c.fetchall()]
+        self.db_name = db_name
+        self.token = os.getenv("GITLAB_TOKEN")
 
-        # Link problems
+        if not self.token:
+            raise Exception("GITLAB_TOKEN not set")
+
+        self.gl = gitlab.Gitlab("https://gitlab.com", private_token=self.token)
+
+    def create_assignment(self, assignment_id, title, problem_ids):
+        """Create assignment repo and export problems"""
+
+        # 1. create GitLab project (repo)
+        project = self.gl.projects.create({
+            'name': assignment_id,
+            'visibility': 'private'
+        })
+
+        # 2. build local export structure
+        export_dir = f"exports/{assignment_id}"
+        os.makedirs(export_dir, exist_ok=True)
+
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
         for pid in problem_ids:
-            c.execute(
-                "INSERT OR IGNORE INTO assignment_problems (assignment_id, problem_id) VALUES (?, ?)",
-                (assignment_id, pid)
-            )
+            cursor.execute("""
+                SELECT instructions, unit_tests
+                FROM problems
+                WHERE id = ?
+            """, (pid,))
 
-    conn.commit()
-    conn.close()
+            row = cursor.fetchone()
+            if not row:
+                continue
 
-    print(f"Assignment '{title}' created with problems: {problem_ids}")
+            instructions, tests = row
+
+            problem_dir = os.path.join(export_dir, pid)
+            os.makedirs(problem_dir, exist_ok=True)
+
+            with open(os.path.join(problem_dir, "instructions.md"), "w") as f:
+                f.write(instructions or "")
+
+            with open(os.path.join(problem_dir, "tests.py"), "w") as f:
+                f.write(tests or "")
+
+        conn.close()
+
+        # 3. commit export to GitLab repo
+        for root, dirs, files in os.walk(export_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                rel_path = os.path.relpath(file_path, export_dir)
+
+                with open(file_path, "r") as f:
+                    content = f.read()
+
+                project.files.create({
+                    'file_path': rel_path,
+                    'branch': 'main',
+                    'content': content,
+                    'commit_message': f'Add {rel_path}'
+                })
+
+        return project.web_url
+
+    def get_assignment_problems(self, assignment_id):
+        """Return problems for display (optional)"""
+
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT p.id, p.title, p.instructions, p.unit_tests
+            FROM problems p
+            JOIN assignment_problems ap ON p.id = ap.problem_id
+            WHERE ap.assignment_id = ?
+        """, (assignment_id,))
+
+        rows = cursor.fetchall()
+        conn.close()
+
+        return rows
