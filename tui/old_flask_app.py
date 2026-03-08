@@ -8,7 +8,7 @@ from services.assignment_service import create_assignment
 app = Flask(__name__)
 app.secret_key = "dev-secret-key"
 
-# Path to directory of database
+# Path to instructions of database
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 # Path to database
 DB_PATH = os.path.join(BASE_DIR, "assignments.db")

@@ -20,6 +20,8 @@ from scripts.create_db import create_database
 
 from scripts.create_db import create_database
 from tui.app import AssignmentManagerApp
+from dotenv import load_dotenv
+load_dotenv()  # loads GITLAB_TOKEN from .env
 
 if __name__ == "__main__":
     app = AssignmentManagerApp()
