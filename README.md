@@ -1,3 +1,18 @@
+<img width="968" height="624" alt="Screenshot 2026-03-10 at 10 45 26 PM" src="https://github.com/user-attachments/assets/bea6c9f8-d83b-4b0f-bb57-7af1e7a18467" />
+<img width="962" height="619" alt="Screenshot 2026-03-10 at 10 45 53 PM" src="https://github.com/user-attachments/assets/9501736f-9679-4221-90a1-e3e9cdc53632" />
+<img width="967" height="624" alt="Screenshot 2026-03-10 at 10 46 59 PM" src="https://github.com/user-attachments/assets/39780d37-3353-4568-887b-b65e7d304e0d" />
+<img width="1512" height="869" alt="Screenshot 2026-03-10 at 10 51 25 PM" src="https://github.com/user-attachments/assets/b137dd89-36fc-4f3f-8e8e-71920aa947c8" />
+
+
+
+
+
+# Current Progress
+Assignment manager lets user pick and match problems to bundle into assignment. Upon user choice, the assignments are sent to gitlab in their own project with repositories. These are then available and ready for students to clone to complete and commit back to GitLab.
+
+# Project Estimated Completion Date
+- May 2026
+
 # Project - Assignment Manager
 
 This repository is for the semester project. For each milestone, you should update the corresponding
