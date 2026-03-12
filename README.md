@@ -12,6 +12,8 @@
 # Current Progress
 Assignment manager lets user pick and match problems to bundle into assignment. Upon user choice, the assignments are sent to gitlab in their own project with repositories. These are then available and ready for students to clone to complete and commit back to GitLab.
 
+-    Project organized using SOLID principles
+
 # Project Estimated Completion Date
 - May 2026
 
