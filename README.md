@@ -1,5 +1,5 @@
 # Sample Photos of Functionality 
--   Choose problems --> bundle --> create assignment --> GitLab Project Created
+-   Choose Problems --> Review Problem--> Bundle --> Create Assignment --> GitLab Project Created
 -   Detailed information below.
 
 <img width="968" height="624" alt="Screenshot 2026-03-10 at 10 45 26 PM" src="https://github.com/user-attachments/assets/bea6c9f8-d83b-4b0f-bb57-7af1e7a18467" />
