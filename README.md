@@ -2,14 +2,25 @@
 -   Choose Problems --> Review Problem--> Bundle --> Create Assignment --> GitLab Project Created
 -   Detailed information below.
 
+Home Page
 <img width="1512" height="866" alt="Screenshot 2026-03-25 at 9 00 35 PM" src="https://github.com/user-attachments/assets/0159a447-e7ea-4672-8545-c1a5c6dac73c" />
+View Problems
 <img width="1512" height="869" alt="Screenshot 2026-03-25 at 9 07 45 PM" src="https://github.com/user-attachments/assets/0eee1b38-d70d-4670-99cd-f7416088a42e" />
+Review Problem Content
+<img width="1512" height="865" alt="Screenshot 2026-03-25 at 9 08 05 PM" src="https://github.com/user-attachments/assets/106b6246-ebc3-4cf1-b88c-4b69b161c655" />
+Add to assignment
 <img width="1512" height="862" alt="Screenshot 2026-03-25 at 9 09 13 PM" src="https://github.com/user-attachments/assets/3970c23c-4620-40fd-a540-bf7f80f099c8" />
+ALTERNATIVE - AI Chat BOT (Prompt)
 <img width="1512" height="863" alt="Screenshot 2026-03-25 at 9 09 43 PM" src="https://github.com/user-attachments/assets/7bf28346-9d59-443c-92d1-3c5e51be3ebd" />
+Problems Added
 <img width="1512" height="866" alt="Screenshot 2026-03-25 at 9 09 59 PM" src="https://github.com/user-attachments/assets/e0e8fbfd-0646-4e37-b0f7-f9f6a244caca" />
+Create assignment prompt
 <img width="1512" height="867" alt="Screenshot 2026-03-25 at 9 10 22 PM" src="https://github.com/user-attachments/assets/e84fdefe-e102-4a1b-b859-c62b1d5a7bdd" />
+Review or Publish
 <img width="1512" height="871" alt="Screenshot 2026-03-25 at 9 12 12 PM" src="https://github.com/user-attachments/assets/0781a20f-4594-43ec-8dc7-1be123f75ef4" />
+Built
 <img width="1512" height="868" alt="Screenshot 2026-03-25 at 9 16 09 PM" src="https://github.com/user-attachments/assets/81b0335e-7543-4cdb-82fa-66c716a694e9" />
+Assignment in GitLab
 <img width="1512" height="866" alt="Screenshot 2026-03-25 at 9 16 40 PM" src="https://github.com/user-attachments/assets/64899442-f176-42ec-8504-bfbb779b72cb" />
 
 
