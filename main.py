@@ -1,6 +1,5 @@
 
 # Run in terminal with python3 main.py
-#
 # cd ~/PycharmProjects/Project_wazevedo
 # python3 main.py
 
