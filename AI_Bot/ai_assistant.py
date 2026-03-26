@@ -4,7 +4,7 @@ from anthropic import Anthropic
 from dotenv import load_dotenv
 
 load_dotenv()
-# Claude AI
+# Claude AI Tool
 class AIAssistant:
     def __init__(self, database_service):
         self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
