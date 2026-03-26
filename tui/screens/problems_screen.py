@@ -1,5 +1,6 @@
 from textual.screen import Screen
-from textual.widgets import DataTable
+from textual.widgets import DataTable, Button
+from textual.containers import Vertical
 from services.database_service import DatabaseService
 from tui.screens.problem_preview import ProblemPreview
 
@@ -25,6 +26,11 @@ class ProblemsScreen(Screen):
             )
 
         yield self.table
+        yield Button("Back", id="back")
+
+    def on_button_pressed(self, event: Button.Pressed):
+        if event.button.id == "back":
+            self.app.pop_screen()
 
     def on_data_table_row_selected(self, event: DataTable.RowSelected):
 
@@ -41,5 +47,4 @@ class ProblemsScreen(Screen):
         if not problem:
             return
 
-        # open preview screen
         self.app.push_screen(ProblemPreview(problem))

@@ -34,7 +34,7 @@ class DatabaseService:
         cursor = conn.cursor()
 
         cursor.execute("""
-            SELECT id, title, instructions, unit_tests
+            SELECT id, title, instructions, src_code, unit_tests
             FROM problems
             WHERE id = ?
         """, (problem_id,))
