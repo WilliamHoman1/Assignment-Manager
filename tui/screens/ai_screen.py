@@ -177,17 +177,20 @@ class AIScreen(Screen):
     async def _build_assignment(self, ps_number: int):
         """Trigger GitLab build directly from chat"""
         try:
+            import time
             from services.assignment_service import AssignmentService
             service = AssignmentService()
+            timestamp = int(time.time())
+            assignment_id = f"problem_set_lab_{ps_number}_{timestamp}"
             url = service.create_assignment(
-                assignment_id=f"problem_set_lab_{ps_number}",
+                assignment_id=assignment_id,
                 title=f"Problem Set Lab {ps_number}",
                 problem_ids=self.app.selected_problems,
                 problem_set_number=ps_number
             )
             self.add_message("ai", f"✓ Assignment built successfully! GitLab URL: {url}")
         except Exception as e:
-            self.add_message("ai", f"Error building assignment: {str(e)}")
+            self.add_message("ai", f"Error: {str(e)}")
 
     @on(Button.Pressed, "#build-btn")
     def handle_build(self):

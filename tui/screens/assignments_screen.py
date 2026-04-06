@@ -62,24 +62,34 @@ class AssignmentsScreen(Screen):
             if len(self.app._screen_stack) > 0:
                 self.app.pop_screen()  # return to menu
 
+
         elif event.button.id == "build":
-            # Get the problem set number from input
+
+            import time
+
             ps_number_str = self.ps_input.value.strip()
+
             if not ps_number_str.isdigit():
                 self.notify("Please enter a valid Problem Set Number")
+
                 return
+
             ps_number = int(ps_number_str)
 
-            # Create the assignment using AssignmentService
+            timestamp = int(time.time())
+
             service = AssignmentService()
 
-            # We will use the problem set number to generate the root README
-            # AssignmentService.create_assignment now expects problem_set_number
             url = service.create_assignment(
-                assignment_id=f"problem_set_lab_{ps_number}",
+
+                assignment_id=f"problem_set_lab_{ps_number}_{timestamp}",
+
                 title=f"Problem Set Lab {ps_number}",
+
                 problem_ids=self.app.selected_problems,
+
                 problem_set_number=ps_number
+
             )
 
             self.notify(f"Assignment built: {url}")
