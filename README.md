@@ -58,20 +58,36 @@ and GUI.
 
 ## Milestone 2
 
-Update this section to describe your project for milestone 2 and complete the following sections. If your project is
-using assets, be sure to keep the citations, sources, and resources section updated.
+From Milestone 1, my project the development of my project has drastically changed. I have completed many features that are going to be useful
+in using my application. Milestone 2 was about getting my project functioning to the best of its ability and being able to present to others.
+The goal I set for this application is coming alive as the creation of assignments is happening in just a few clicks of a button. The database is
+created, GUI, as well as the creation of repositories in GitLab. I am ready to continue polishing my project until it is ready for deployment but
+have made immense progress since milestone 1.
 
 ### Current Progress
 
-Update this section to describe the current progress of your project.
+I have set up the GUI in Textual (Rapid Development Framework) to bypass any government restrictions and also allowing
+my project to be viewed in the terminal or on web app. The database is up to date with source code, README files, and test files. The user can pick the 
+assignment they want, package in into an assignment, and then it is automatically created in GitLab to be cloned for other students to work on. I have also
+sorted my code through SOLID principles, which states each directory or file supports a modular component. For example, my tui folder supports the textual
+interface I am working with. I have also created scripts that automatically populate information into the database by syncing problems from GitLab and inputing
+them into the table. 
 
 ### Challenges
 
-Update this section to describe the challenges for your project at this stage.
+The challenges I have had during Milestone 2 were reorganizing my project and building from there. After receiving some guidance that working directly in a 
+web app was not going to work because of accessibility issues, I had to pivot. I switched to Textual, which works in the terminal but also has an option to work
+on a web app as well. I have not worked in the terminal before this project and I learned a lot when it comes to developing the framework, buttons, and how to 
+access the terminal from my program. This challenge was ultimately a positive for me because I ended up learning some HTML as well as working with Textual. After
+making this switch and reorganizing my files, I then built out to what it is now.
 
 ### Future Directions
 
-What are your plans for the final submission?
+My plans for the final submission is to clean up the assignment generation in GitLab. Currently, when the user creates an assignment, its own project is created
+and repository. I need some clarification on if that is the way it should be done or another way. Once I get this, I believe everything will come together. Something
+else I am looking in to is having generated feedback for students, kind of like a chatbot to speak on what the students did right vs wrong. Lastly, I would like to 
+add a feature where the professor can create new problems instead of the ones that are in the database currently. However, I am not 100% sure how to do so yet. Overall,
+I am happy with where I am at and looking forward to continue my work!
 
 
 

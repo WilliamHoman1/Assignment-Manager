@@ -24,10 +24,13 @@ class AssignmentService:
         including default root README.md for the assignment.
         """
         # 1. Create GitLab project
-        project = self.gl.projects.create({
-            "name": assignment_id,
-            "visibility": "private"
-        })
+        try:
+            project = self.gl.projects.create({
+                "name": assignment_id,
+                "visibility": "private"
+            })
+        except gitlab.exceptions.GitlabCreateError:
+            raise Exception(f"Assignment name '{assignment_id}' is already used in GitLab. Please choose a different problem set number.")
 
         # 2. Create local folder structure
         export_dir = os.path.join("exports", assignment_id)
@@ -48,29 +51,28 @@ class AssignmentService:
                 print(f"Problem {pid} not found in database, skipping.")
                 continue
 
-            instructions, tests, src_code = row  # <- already contains content from DB
+            instructions, tests, src_code = row
 
-            # 4. Create folders for this problem
+            # 4. Create flat folder for this problem
             problem_dir = os.path.join(export_dir, pid)
-            src_dir = os.path.join(problem_dir, "src")
-            tests_dir = os.path.join(problem_dir, "tests")
-            os.makedirs(src_dir, exist_ok=True)
-            os.makedirs(tests_dir, exist_ok=True)
+            os.makedirs(problem_dir, exist_ok=True)
 
             # 5. Write problem README
             readme_path = os.path.join(problem_dir, "README.md")
             with open(readme_path, "w") as f:
                 f.write(instructions or "")
 
-            # 6. Write source code
-            src_file_path = os.path.join(src_dir, f"{pid}.py")
+            # 6. Write source code — named simply so tests can import it
+            src_file_path = os.path.join(problem_dir, f"{pid}.py")
             with open(src_file_path, "w") as f:
                 f.write(src_code or "")
 
-            # 7. Write unit tests
-            test_file_path = os.path.join(tests_dir, f"test_{pid}.py")
+            # 7. Write unit tests — in same folder as src so import works
+            test_file_path = os.path.join(problem_dir, f"test_{pid}.py")
             with open(test_file_path, "w") as f:
-                f.write(tests or "")
+                # Fix the import line to match the actual filename
+                fixed_tests = self._fix_import(tests or "", pid)
+                f.write(fixed_tests)
 
         conn.close()
 
@@ -97,6 +99,18 @@ class AssignmentService:
                     print(f"Warning: Could not add {rel_path} to GitLab: {e}")
 
         return project.web_url
+
+    def _fix_import(self, test_code: str, problem_id: str) -> str:
+        """
+        Replace any 'import problem_one' style imports with
+        the actual problem file name so tests can find the source file.
+        """
+        import re
+        # Replace any 'import problem_xxx' with 'import <problem_id>'
+        fixed = re.sub(r'import problem_\w+', f'import {problem_id}', test_code)
+        # Also replace 'problem_xxx.function' calls with '<problem_id>.function'
+        fixed = re.sub(r'problem_\w+\.', f'{problem_id}.', fixed)
+        return fixed
 
     @staticmethod
     def default_root_readme(problem_set_number: int) -> str:
