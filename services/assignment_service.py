@@ -1,4 +1,4 @@
-# services/assignment_service.py
+
 
 import sqlite3
 import os
@@ -10,6 +10,8 @@ load_dotenv()
 
 
 class AssignmentService:
+    """Service that creates the assignment in GitLab. Transfers what is chosen by
+    user and moves it to its own repository for students to clone."""
 
     def __init__(self, db_name="data/assignments.db"):
         self.db_name = db_name
@@ -116,6 +118,7 @@ class AssignmentService:
     def default_root_readme(problem_set_number: int) -> str:
         """
         Returns the default README content for a new assignment.
+        Includes introduction, point breakdown, and policy reminders.
         """
         return f"""# Problem Set Lab {problem_set_number} - 35pts
 *Programming Practice*

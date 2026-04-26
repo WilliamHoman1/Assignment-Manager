@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 # Claude AI Tool
 class AIAssistant:
+    """Calls on Anthropic API key to set up AI bot."""
     def __init__(self, database_service):
         self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
         self.db = database_service

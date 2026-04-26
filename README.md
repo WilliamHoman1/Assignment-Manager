@@ -95,18 +95,88 @@ I am happy with where I am at and looking forward to continue my work!
 
 ### Overview
 
-The overview should be at least a paragraph and describe what your project is about.
+My project is a program that automates the creation of assignments. The audience of the project is for CS professors at
+Georgia Highlands College. The project accomplishes the goals of saving time and improving the overall process of assignment
+creation. It works by using a database of problems that are then available for the teacher to select from which will be populated
+in GitLab for students to then clone. Multiple scripts, functions, methods, and files are spread across the entire program, 
+each performing a task to make everything run correctly. As a bonus, I have also added an AI chatbot using Claude's API so that
+if the user decides to, the same tasks can be carried out using prompts. The progression of this project has gone from a manual
+creation of assignments by the professor, to a few clicks of a button, and now a few prompts. This project has taught me a lot
+and I have thoroughly enjoyed creating software that will have an impact.
 
 ### Tutorial
 
-The tutorial should at least be 2 paragraphs long and describe how to get started using the program. For example, if it
-is a game then you might want to introduce how to start playing and what the basic controls are. If it is a web
-application, you might want to indicate how to navigate the application and interact with different components.
+To run my program the user needs to be able to install all dependencies and packages. Once this is accomplished, the user will follow 
+the instructions below to run the program either on a web app or in the terminal. Once this process is complete, the user then can 
+navigate through the program and explore the options that are available to them.
+
+After exploring, the steps to make an assignment are first to click 'view problems' from there, the user is able to browse and click on
+which coding problems they would like to include in their assignment. These problems include the source code, test files, and instructions.
+Next, if the user likes that problem, they can then then click 'add to assignment', this will then add it to the assignment que for review.
+The user can repeat the this process until all problems they desire are included in the assignment. Once the assignment is loaded with 
+the problems they want, they must add a number to the problem set (assignment). Once this action is completed, they can click build assignment
+and this will generate the assignment in their GitLab, ready to send out to students for completion. This process can then be repeated for
+different assignments as the semester progress's. 
+
+BONUS: If the user wishes to use the AI chat bot, with Claude. They must enter their own Anthropic API key and once they do this, they will be
+able to build assignments and add problems using prompts. Instead of navigating the application, they will be able to do the same process with
+a few sentences.
 
 ### Installation Instructions
 
-Write instructions here for running your program and any files required to do so as appropriate for your programming
-language**. For Python projects, this typically means having a `requirements.txt` file that you create using
+#### Prerequisites
+- Python 3.8 or higher (download from https://www.python.org if needed)
+- A terminal (Terminal on Mac, Command Prompt or PowerShell on Windows)
+
+---
+
+#### Step 1 - Clone the Repository
+Clone the project from GitLab or download it as a zip file and unzip it.
+
+---
+
+#### Step 2 - Navigate to the Project Folder
+Open your terminal and navigate to wherever you cloned or downloaded the project.
+For example:
+
+   cd ~/Downloads/Project_wazevedo
+
+The folder name may vary depending on where you saved it.
+
+---
+
+#### Step 3 - Install Dependencies
+Run the following command to install all required packages:
+
+   pip install -r requirements.txt
+
+---
+
+#### Step 4 - Set Up Environment Variables
+A pre-configured .env file has been provided separately via email.
+Place it in the root of the project folder (same level as main.py).
+
+If you wish to use your own credentials instead, rename .env.example
+to .env and fill in your own values:
+
+   GITLAB_TOKEN: GitLab → Settings → Access Tokens
+   GITLAB_PROJECT_ID: GitLab → Your Project → Settings → General
+   ANTHROPIC_API_KEY: https://console.anthropic.com
+
+---
+
+#### Step 5 - Run the App
+
+**Option 1 - Terminal (Recommended)**
+
+   python3 main.py
+
+**Option 2 - Web Browser**
+
+   python3 -c "from textual_serve.server import Server; Server('python3 main.py').serve()"
+
+   Then open your browser and go to: http://localhost:8000
+
 `pip freeze > requirements.txt`.
 
 ### Citation, Sources, and References
@@ -114,18 +184,8 @@ language**. For Python projects, this typically means having a `requirements.txt
 Complete this section to include citations for assets and resources that you used for your project. For example, you could
 write this section like in the following example:
 
+- Anthropic. (2026). Claude API Documentation. https://docs.anthropic.com
 
-[UI-Pack Sci-FI from kenney.nl](https://kenney.nl/assets/ui-pack-sci-fi)
+- GitLab. (2026). GitLab API Documentation. https://docs.gitlab.com/ee/api/
 
-[Digital Audio Pack from kenny.nl](https://kenney.nl/assets/digital-audio)
-
-I created by own ASCII art using the [asciiflow web application](https://asciiflow.com/#/ ) and generative AI.
-
-
-> [!note]
-> Any assets and resources you use need to be verifiable that they are licenced for you to use. If you made your
-own assets or used generative AI, you must indicate that you did so. Include a link to any assets that you
-downloaded and used. 
-
-> [!important]
-> Leaving the "Citation, Sources, and References" section unedited will count as not having completed it.
+- Textualize. (2026). Textual Documentation. https://textual.textualize.io

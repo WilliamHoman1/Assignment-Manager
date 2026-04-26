@@ -2,7 +2,7 @@ import sqlite3
 
 def create_database(db_name='assignments.db'):
     """Creates sqlite3 database,
-    Sets up empty database and insert problems inserts the specific problems into the databas"""
+    Sets up empty database and insert problems inserts the specific problems into the database"""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
 
@@ -39,5 +39,6 @@ def create_database(db_name='assignments.db'):
     print(f"Database '{db_name}' created with tables.")
 
 # Only runs when file executed directly
+# Creates a database
 if __name__ == "__main__":
     create_database()

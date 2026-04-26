@@ -1,3 +1,7 @@
+"""Script used to add source column into database after database was
+already created. This was done so that the database did not have to be
+deleted and then made again"""
+
 import sqlite3
 import os
 

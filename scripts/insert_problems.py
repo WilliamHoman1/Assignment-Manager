@@ -12,6 +12,7 @@ DB_PATH = os.path.join(BASE_DIR, "data", "assignments.db")
 
 
 def get_gitlab_client():
+    """Pulls gitlab API"""
     token = os.getenv("GITLAB_TOKEN")
     if not token:
         raise Exception("GITLAB_TOKEN not set.")
@@ -19,6 +20,8 @@ def get_gitlab_client():
 
 
 def sync_gitlab_problems(project_id):
+    """Function that pulls the problems from GitLab into the database as JSON
+    files, ready to be inserted into the database."""
     gl = get_gitlab_client()
     project = gl.projects.get(project_id)
 
@@ -101,6 +104,8 @@ def sync_gitlab_problems(project_id):
 
 
 def main():
+    """To run the insertion of problems into the database. The project ID
+    is needed for this to be completed. Project ID is attached below."""
     project_id = input("GitLab Project ID: ").strip()
     if not project_id:
         print("Project ID required.")
