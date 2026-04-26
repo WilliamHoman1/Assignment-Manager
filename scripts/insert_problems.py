@@ -30,11 +30,8 @@ def sync_gitlab_problems(project_id):
 
     synced = 0
 
-    # Iterate over JSON metadata files in the repo
-    items = project.repository_tree(recursive=True, get_all=True)
     items = project.repository_tree(recursive=True, get_all=True)
 
-    # DEBUG: print all paths GitLab sees
     for item in items:
         print(item["path"], item["type"])
 
@@ -60,8 +57,8 @@ def sync_gitlab_problems(project_id):
         instructions_path = metadata.get("instructions")
         code_path = metadata.get("code")
         tests_path = metadata.get("unit_tests")
+        supplemental_paths = metadata.get("supplemental_files", [])  # ← new
 
-        # Fetch instructions, src, and tests from GitLab
         def fetch_file(path, file_type):
             if not path:
                 return ""
@@ -76,14 +73,21 @@ def sync_gitlab_problems(project_id):
         src_code = fetch_file(code_path, "src")
         unit_tests = fetch_file(tests_path, "tests")
 
+        # Fetch supplemental file contents and store by filename ← new
+        supplemental_contents = {}
+        for path in supplemental_paths:
+            filename = os.path.basename(path)
+            supplemental_contents[filename] = fetch_file(path, "supplemental")
+        supplemental_json = json.dumps(supplemental_contents) if supplemental_contents else None
+
         if not problem_id or not title:
             print(f"Skipping {item['path']} — missing id or title")
             continue
 
         cursor.execute("""
             INSERT OR REPLACE INTO problems
-            (id, title, topic, difficulty, language, instructions, unit_tests, src_code, position)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (id, title, topic, difficulty, language, instructions, unit_tests, src_code, position, supplemental_files)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             problem_id,
             title,
@@ -93,7 +97,8 @@ def sync_gitlab_problems(project_id):
             instructions,
             unit_tests,
             src_code,
-            position
+            position,
+            supplemental_json  # ← new
         ))
 
         synced += 1
@@ -101,7 +106,6 @@ def sync_gitlab_problems(project_id):
     conn.commit()
     conn.close()
     print(f"Synced {synced} problems from GitLab.")
-
 
 def main():
     """To run the insertion of problems into the database. The project ID

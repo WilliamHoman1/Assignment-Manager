@@ -4,6 +4,7 @@ import sqlite3
 import os
 from dotenv import load_dotenv
 import gitlab
+import json
 
 # Load environment variables from .env
 load_dotenv()
@@ -42,9 +43,11 @@ class AssignmentService:
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
 
-        for pid in problem_ids:
+        for new_position, pid in enumerate(problem_ids, start=1):
+            new_pid = f"problem_{new_position}"
+
             cursor.execute("""
-                SELECT instructions, unit_tests, src_code
+                SELECT instructions, unit_tests, src_code, supplemental_files
                 FROM problems
                 WHERE id = ?
             """, (pid,))
@@ -53,66 +56,106 @@ class AssignmentService:
                 print(f"Problem {pid} not found in database, skipping.")
                 continue
 
-            instructions, tests, src_code = row
+            instructions, tests, src_code, supplemental_files = row
 
-            # 4. Create flat folder for this problem
-            problem_dir = os.path.join(export_dir, pid)
+            # Renumber content to match position in this assignment
+            instructions = self._renumber_readme(instructions, pid, new_position)
+            fixed_tests = self._fix_import(tests or "", new_pid)
+
+            # Create flat folder for this problem
+            problem_dir = os.path.join(export_dir, new_pid)
             os.makedirs(problem_dir, exist_ok=True)
 
-            # 5. Write problem README
+            # Write problem README
             readme_path = os.path.join(problem_dir, "README.md")
             with open(readme_path, "w") as f:
                 f.write(instructions or "")
 
-            # 6. Write source code — named simply so tests can import it
-            src_file_path = os.path.join(problem_dir, f"{pid}.py")
+            # Write source code
+            src_file_path = os.path.join(problem_dir, f"{new_pid}.py")
             with open(src_file_path, "w") as f:
                 f.write(src_code or "")
 
-            # 7. Write unit tests — in same folder as src so import works
-            test_file_path = os.path.join(problem_dir, f"test_{pid}.py")
+            # Write unit tests
+            test_file_path = os.path.join(problem_dir, f"test_{new_pid}.py")
             with open(test_file_path, "w") as f:
-                # Fix the import line to match the actual filename
-                fixed_tests = self._fix_import(tests or "", pid)
                 f.write(fixed_tests)
+
+            # Write supplemental files if any  ← new
+            if supplemental_files:
+                supp_data = json.loads(supplemental_files)
+                for filename, content in supp_data.items():
+                    supp_file_path = os.path.join(problem_dir, filename)
+                    with open(supp_file_path, "w") as f:
+                        f.write(content)
 
         conn.close()
 
-        # 8. Write root README
+        # 4. Write root README
         root_readme_path = os.path.join(export_dir, "README.md")
         with open(root_readme_path, "w") as f:
             f.write(self.default_root_readme(problem_set_number))
 
-        # 9. Push files to GitLab
+        # 5. Push files to GitLab
+        actions = []
         for root, dirs, files in os.walk(export_dir):
             for file in files:
                 file_path = os.path.join(root, file)
                 rel_path = os.path.relpath(file_path, export_dir)
                 with open(file_path, "r") as f:
                     content = f.read()
-                try:
-                    project.files.create({
-                        "file_path": rel_path,
-                        "branch": "main",
-                        "content": content,
-                        "commit_message": f"Add {rel_path}"
-                    })
-                except gitlab.exceptions.GitlabCreateError as e:
-                    print(f"Warning: Could not add {rel_path} to GitLab: {e}")
+                actions.append({
+                    "action": "create",
+                    "file_path": rel_path,
+                    "content": content
+                })
+
+        try:
+            project.commits.create({
+                "branch": "main",
+                "commit_message": f"Add Problem Set Lab {problem_set_number}",
+                "actions": actions
+            })
+        except gitlab.exceptions.GitlabCreateError as e:
+            print(f"Warning: Could not push files to GitLab: {e}")
 
         return project.web_url
 
     def _fix_import(self, test_code: str, problem_id: str) -> str:
         """
-        Replace any 'import problem_one' style imports with
+        Replace any 'import problem_xxx' style imports and class names with
         the actual problem file name so tests can find the source file.
         """
         import re
-        # Replace any 'import problem_xxx' with 'import <problem_id>'
+        # Replace import statement: import problem_three → import problem_1
         fixed = re.sub(r'import problem_\w+', f'import {problem_id}', test_code)
-        # Also replace 'problem_xxx.function' calls with '<problem_id>.function'
+
+        # Replace function calls: problem_three.func() → problem_1.func()
         fixed = re.sub(r'problem_\w+\.', f'{problem_id}.', fixed)
+
+        # Replace class name: TestProblemThree → TestProblem1
+        fixed = re.sub(r'class TestProblem\w+\(', f'class Test{problem_id.capitalize()}(', fixed)
+
         return fixed
+
+    def _renumber_readme(self, content: str, original_pid: str, new_position: int) -> str:
+        """
+        Replace hardcoded problem references in README with the new position number.
+        e.g. problem_three → problem_1, Problem 3 → Problem 1
+        """
+        import re
+        # Replace file path references: problem_three.py → problem_1.py
+        content = content.replace(original_pid, f"problem_{new_position}")
+
+        # Replace heading number: ## Problem 3 → ## Problem 1
+        # Handles any digit that may already be there
+        content = re.sub(
+            r'(## Problem\s+)\d+',
+            rf'\g<1>{new_position}',
+            content
+        )
+
+        return content
 
     @staticmethod
     def default_root_readme(problem_set_number: int) -> str:
@@ -175,3 +218,4 @@ instructor at another institution unless given prior permission by the instructo
 students to have access to the same resources to work on the problems and learn.
 
 """
+
