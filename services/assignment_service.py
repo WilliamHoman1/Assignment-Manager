@@ -47,10 +47,10 @@ class AssignmentService:
             new_pid = f"problem_{new_position}"
 
             cursor.execute("""
-                SELECT instructions, unit_tests, src_code, supplemental_files
-                FROM problems
-                WHERE id = ?
-            """, (pid,))
+                    SELECT instructions, unit_tests, src_code, supplemental_files
+                    FROM problems
+                    WHERE id = ?
+                """, (pid,))
             row = cursor.fetchone()
             if not row:
                 print(f"Problem {pid} not found in database, skipping.")
@@ -62,33 +62,36 @@ class AssignmentService:
             instructions = self._renumber_readme(instructions, pid, new_position)
             fixed_tests = self._fix_import(tests or "", new_pid)
 
-            # Create flat folder for this problem
+            # Create problem folder with src and tests subdirectories
             problem_dir = os.path.join(export_dir, new_pid)
-            os.makedirs(problem_dir, exist_ok=True)
+            src_dir = os.path.join(problem_dir, "src")
+            tests_dir = os.path.join(problem_dir, "tests")
+            os.makedirs(src_dir, exist_ok=True)
+            os.makedirs(tests_dir, exist_ok=True)
 
             # Write problem README
             readme_path = os.path.join(problem_dir, "README.md")
             with open(readme_path, "w") as f:
                 f.write(instructions or "")
 
-            # Write source code
-            src_file_path = os.path.join(problem_dir, f"{new_pid}.py")
+            # Write source code into src/
+            src_file_path = os.path.join(src_dir, f"{new_pid}.py")
             with open(src_file_path, "w") as f:
                 f.write(src_code or "")
 
-            # Write unit tests
-            test_file_path = os.path.join(problem_dir, f"test_{new_pid}.py")
+            # Write unit tests into tests/
+            test_file_path = os.path.join(tests_dir, f"test_{new_pid}.py")
             with open(test_file_path, "w") as f:
                 f.write(fixed_tests)
 
-            # Write supplemental files if any  ← new
+            # Write supplemental files into both src/ and tests/
             if supplemental_files:
                 supp_data = json.loads(supplemental_files)
                 for filename, content in supp_data.items():
-                    supp_file_path = os.path.join(problem_dir, filename)
-                    with open(supp_file_path, "w") as f:
-                        f.write(content)
-
+                    for directory in [src_dir, tests_dir]:
+                        supp_file_path = os.path.join(directory, filename)
+                        with open(supp_file_path, "w") as f:
+                            f.write(content)
         conn.close()
 
         # 4. Write root README
@@ -195,7 +198,25 @@ expected solutions and output. Unit tests provide **automated feedback** but do 
 ## On Comments and Documentation
 
 Throughout this course, part of the grade for these problems will be how well you document your code. For this assignment,
-we will focus on regular inline comments that start with a pound or hashtag sign (#).
+we will focus on regular inline comments that start with a pound or hashtag sign (#) and docstrings, which are multiline
+strings that go on the line right after the def keyword. 
+
+
+Please note that unit tests relating to docstring are supportive in that they will test if you forgot
+to update them and test if the docstring exists. But you need to check that you updated them as given
+in the README.md directions.
+
+
+## Important - Code Needs to Run As-Is - Please run and test before and after submitting.
+
+As a reminder, your submitted code needs to run as-is. As per the syllabus, points may be deducted
+for code that does not run up to and including earning 0 points. Please test your code before and after submitting.
+
+For this assignment, a small and easily fixable issue as determined by the instructor (ex/ missing a colon, has a left
+square bracket but not a right one, etc.) will result in a loss of -3pts per issue. If there is a significant issue that
+would require major modification to fix as determined by the instructor for the program to run, it may result in no
+points being awarded for the relevant components.
+
 
 ## Policy Reminder - AI
 
