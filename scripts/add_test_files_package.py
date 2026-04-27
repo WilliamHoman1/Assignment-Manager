@@ -1,3 +1,5 @@
+"""Script used to add test files column into database after database was created"""
+
 import sqlite3
 import os
 

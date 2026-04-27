@@ -1,4 +1,4 @@
-
+"""Creates the assignment when problems are chosen."""
 
 import sqlite3
 import os
@@ -68,7 +68,7 @@ class AssignmentService:
             os.makedirs(src_dir, exist_ok=True)
             os.makedirs(tests_dir, exist_ok=True)
 
-            # Write root conftest.py so pytest finds src/  ← new
+            # Write root conftest.py so pytest finds src/
             root_conftest_path = os.path.join(problem_dir, "conftest.py")
             with open(root_conftest_path, "w") as f:
                 f.write("import sys\nimport os\n\nsys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))\n")
@@ -149,13 +149,13 @@ class AssignmentService:
         the actual problem file name so tests can find the source file.
         """
         import re
-        # Replace import statement: import problem_three → import problem_1
+        # Replace import statement: import problem_three - import problem_1
         fixed = re.sub(r'import problem_\w+', f'import {problem_id}', test_code)
 
-        # Replace function calls: problem_three.func() → problem_1.func()
+        # Replace function calls: problem_three.func() - problem_1.func()
         fixed = re.sub(r'problem_\w+\.', f'{problem_id}.', fixed)
 
-        # Replace class name: TestProblemThree → TestProblem1
+        # Replace class name: TestProblemThree - TestProblem1
         fixed = re.sub(r'class TestProblem\w+\(', f'class Test{problem_id.capitalize()}(', fixed)
 
         return fixed
@@ -166,10 +166,10 @@ class AssignmentService:
         e.g. problem_three → problem_1, Problem 3 → Problem 1
         """
         import re
-        # Replace file path references: problem_three.py → problem_1.py
+        # Replace file path references: problem_three.py = problem_1.py
         content = content.replace(original_pid, f"problem_{new_position}")
 
-        # Replace heading number: ## Problem 3 → ## Problem 1
+        # Replace heading number: ## Problem 3 - ## Problem 1
         # Handles any digit that may already be there
         content = re.sub(
             r'(## Problem\s+)\d+',

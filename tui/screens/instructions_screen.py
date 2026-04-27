@@ -1,3 +1,6 @@
+"""Instructions file for user if they get stuck or want a
+tutorial on how to move around the application."""
+
 from textual.screen import Screen
 from textual.widgets import Button, Label, Markdown
 from textual.containers import Vertical, ScrollableContainer
@@ -68,6 +71,7 @@ class InstructionsScreen(Screen):
     """
 
     def compose(self):
+        """Sets up buttons and GUI for the instructions and help buttons."""
         yield Vertical(
             Label("❓  Help & Instructions", id="heading"),
             ScrollableContainer(
@@ -79,9 +83,11 @@ class InstructionsScreen(Screen):
         )
 
     def on_button_pressed(self, event: Button.Pressed):
+        """Handles when the user wants to exit a screen"""
         if event.button.id == "close":
             self.app.pop_screen()
 
     def on_key(self, event):
+        """Handles when user presses escape key."""
         if event.key == "escape":
             self.app.pop_screen()

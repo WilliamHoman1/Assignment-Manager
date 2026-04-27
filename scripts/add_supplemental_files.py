@@ -1,3 +1,5 @@
+"""Script used to add supplemental files column to database"""
+
 import sqlite3
 import os
 

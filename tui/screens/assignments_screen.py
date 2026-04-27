@@ -8,6 +8,7 @@ from services.assignment_service import AssignmentService
 class AssignmentsScreen(Screen):
 
     def compose(self):
+        """Sets up GUI for assignment screen"""
         # Table of selected problems
         self.table = DataTable()
         self.table.add_columns("ID", "Title", "Action")
@@ -37,6 +38,7 @@ class AssignmentsScreen(Screen):
         yield Button("Return to Menu", id="menu")
 
     def on_data_table_cell_selected(self, event: DataTable.CellSelected):
+        """Allows for selecting and removing problems from assignment screen."""
         # Handle removing problems
         row = self.table.get_row(event.cell_key.row_key)
         if not row:
@@ -54,6 +56,7 @@ class AssignmentsScreen(Screen):
             self.app.push_screen(AssignmentsScreen())
 
     async def on_button_pressed(self, event: Button.Pressed):
+        """Handles each event for a button pressed on the assignment screen."""
         if event.button.id == "back":
             self.app.pop_screen()
 

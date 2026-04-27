@@ -6,12 +6,16 @@ from tui.screens.fullscreen_preview import FullscreenPreview
 
 
 class ProblemPreview(Screen):
+    """When problem is clicked on to preview, initiates this screen where the user
+    can choose to view components of the problem in fullscreen."""
 
     def __init__(self, problem):
+        """Initialize the screen with the given problem."""
         super().__init__()
         self.problem = problem
 
     def compose(self):
+        """Composes the screen in Textual with the design of it."""
         yield ScrollableContainer(
             Vertical(
 
@@ -55,6 +59,8 @@ class ProblemPreview(Screen):
         )
 
     def on_button_pressed(self, event: Button.Pressed):
+        """Handles when user presses certain buttons like back, add
+        instructions, etc."""
 
         if event.button.id == "back":
             self.app.pop_screen()

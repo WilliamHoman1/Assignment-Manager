@@ -9,6 +9,7 @@ from services.database_service import DatabaseService
 
 
 class AIScreen(Screen):
+    """Sets up layout for the AI chatbot screen."""
 
     CSS = """
     AIScreen {
@@ -71,10 +72,13 @@ class AIScreen(Screen):
     """
 
     def __init__(self):
+        """Initializes the AI screen. Sets up AIAssistant instance with the
+        database."""
         super().__init__()
         self.assistant = AIAssistant(DatabaseService())
 
     def compose(self) -> ComposeResult:
+        """Builds the AI screen."""
         yield ScrollableContainer(id="chat-history")
         with Horizontal(id="input-row"):
             yield Input(placeholder="Describe the assignment you want...", id="chat-input")
@@ -112,6 +116,7 @@ class AIScreen(Screen):
         self.run_worker(self._get_ai_response(user_text), exclusive=True)
 
     async def _get_ai_response(self, user_text: str):
+        """AI response function"""
         response = self.assistant.chat(user_text)
 
         try:
@@ -194,11 +199,13 @@ class AIScreen(Screen):
 
     @on(Button.Pressed, "#build-btn")
     def handle_build(self):
+        """Trigger GitLab build directly from chat"""
         from tui.screens.assignments_screen import AssignmentsScreen
         self.app.push_screen(AssignmentsScreen())
 
     @on(Button.Pressed, "#clear-btn")
     def handle_clear(self):
+        """Clears chat history"""
         self.assistant.reset_conversation()
         self.app.selected_problems = []
         self.query_one("#chat-history", ScrollableContainer).remove_children()
@@ -206,4 +213,5 @@ class AIScreen(Screen):
 
     @on(Button.Pressed, "#back-btn")
     def handle_back(self):
+        """Back to main menu"""
         self.app.pop_screen()

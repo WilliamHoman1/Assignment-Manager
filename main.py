@@ -1,9 +1,9 @@
-
+"""Main file where program is started"""
 # Run in terminal with python3 main.py
 # cd ~/PycharmProjects/Project_wazevedo
 # python3 main.py
 
-from scripts.create_db import create_database
+
 from tui.app import AssignmentManagerApp
 from dotenv import load_dotenv
 load_dotenv()  # loads GITLAB_TOKEN from .env

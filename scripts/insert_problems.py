@@ -1,4 +1,4 @@
-
+"""Method used to sync up problems and variables from GitLab into the database."""
 import sqlite3
 import gitlab
 import json
@@ -61,6 +61,7 @@ def sync_gitlab_problems(project_id):
         use_test_files_package = int(metadata.get("use_test_files_package", False))
 
         def fetch_file(path, file_type):
+            """Gets file"""
             if not path:
                 return ""
             try:

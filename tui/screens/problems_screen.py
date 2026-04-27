@@ -6,8 +6,10 @@ from tui.screens.problem_preview import ProblemPreview
 
 
 class ProblemsScreen(Screen):
+    """Handles the 'view problems' screen. """
 
     def compose(self):
+        """Creates the table and shows available problems."""
 
         self.table = DataTable()
         self.table.cursor_type = "row"
@@ -29,10 +31,12 @@ class ProblemsScreen(Screen):
         yield Button("Back", id="back")
 
     def on_button_pressed(self, event: Button.Pressed):
+        """Handles when user presses back button."""
         if event.button.id == "back":
             self.app.pop_screen()
 
     def on_data_table_row_selected(self, event: DataTable.RowSelected):
+        """Handles when user selects data table row."""
 
         row = self.table.get_row(event.row_key)
 

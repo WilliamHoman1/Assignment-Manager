@@ -112,13 +112,13 @@ navigate through the program and explore the options that are available to them.
 
 After exploring, the steps to make an assignment are first to click 'view problems' from there, the user is able to browse and click on
 which coding problems they would like to include in their assignment. These problems include the source code, test files, and instructions.
-Next, if the user likes that problem, they can then then click 'add to assignment', this will then add it to the assignment que for review.
+Next, if the user likes that problem, they can then click 'add to assignment', this will then add it to the assignment que for review.
 The user can repeat the this process until all problems they desire are included in the assignment. Once the assignment is loaded with 
 the problems they want, they must add a number to the problem set (assignment). Once this action is completed, they can click build assignment
 and this will generate the assignment in their GitLab, ready to send out to students for completion. This process can then be repeated for
 different assignments as the semester progress's. 
 
-BONUS: If the user wishes to use the AI chat bot, with Claude. They must enter their own Anthropic API key and once they do this, they will be
+BONUS: If the user wishes to use the AI chatbot, with Claude. They must enter their own Anthropic API key and once they do this, they will be
 able to build assignments and add problems using prompts. Instead of navigating the application, they will be able to do the same process with
 a few sentences.
 
@@ -150,24 +150,30 @@ Run the following command to install all required packages:
 
    pip install -r requirements.txt
 
+    DEPENDECIES INCLUDE:
+
+    anthropic==0.97.0
+    python-dotenv==1.2.2
+    python_gitlab==8.1.0
+    textual==8.2.4
+    textual-serve==1.1.3
 ---
 
 #### Step 4 - Set Up Environment Variables
-A pre-configured .env file has been provided separately via email.
-Place it in the root of the project folder (same level as main.py).
 
 If you wish to use your own credentials instead, rename .env.example
 to .env and fill in your own values:
 
    GITLAB_TOKEN: GitLab → Settings → Access Tokens
    GITLAB_PROJECT_ID: GitLab → Your Project → Settings → General
+
    ANTHROPIC_API_KEY: https://console.anthropic.com
 
 ---
 
 #### Step 5 - Run the App
 
-**Option 1 - Terminal (Recommended)**
+**Option 1 - Terminal**
 
    python3 main.py
 
