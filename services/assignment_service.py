@@ -47,17 +47,16 @@ class AssignmentService:
             new_pid = f"problem_{new_position}"
 
             cursor.execute("""
-                    SELECT instructions, unit_tests, src_code, supplemental_files
-                    FROM problems
-                    WHERE id = ?
-                """, (pid,))
+                SELECT instructions, unit_tests, src_code, supplemental_files, use_test_files_package
+                FROM problems
+                WHERE id = ?
+            """, (pid,))
             row = cursor.fetchone()
             if not row:
                 print(f"Problem {pid} not found in database, skipping.")
                 continue
 
-            instructions, tests, src_code, supplemental_files = row
-
+            instructions, tests, src_code, supplemental_files, use_test_files_package = row
             # Renumber content to match position in this assignment
             instructions = self._renumber_readme(instructions, pid, new_position)
             fixed_tests = self._fix_import(tests or "", new_pid)
@@ -69,10 +68,21 @@ class AssignmentService:
             os.makedirs(src_dir, exist_ok=True)
             os.makedirs(tests_dir, exist_ok=True)
 
+            # Write root conftest.py so pytest finds src/  ← new
+            root_conftest_path = os.path.join(problem_dir, "conftest.py")
+            with open(root_conftest_path, "w") as f:
+                f.write("import sys\nimport os\n\nsys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))\n")
+
+            # Write conftest.py so pytest finds test_files package
+            conftest_path = os.path.join(tests_dir, "conftest.py")
+            with open(conftest_path, "w") as f:
+                f.write("import sys\nimport os\n\nsys.path.insert(0, os.path.dirname(__file__))\n")
+
             # Write problem README
             readme_path = os.path.join(problem_dir, "README.md")
             with open(readme_path, "w") as f:
                 f.write(instructions or "")
+            ...
 
             # Write source code into src/
             src_file_path = os.path.join(src_dir, f"{new_pid}.py")
@@ -84,14 +94,23 @@ class AssignmentService:
             with open(test_file_path, "w") as f:
                 f.write(fixed_tests)
 
-            # Write supplemental files into both src/ and tests/
+            # Write supplemental files
             if supplemental_files:
                 supp_data = json.loads(supplemental_files)
-                for filename, content in supp_data.items():
-                    for directory in [src_dir, tests_dir]:
-                        supp_file_path = os.path.join(directory, filename)
-                        with open(supp_file_path, "w") as f:
+
+                if use_test_files_package:
+                    test_files_dir = os.path.join(tests_dir, "test_files")
+                    os.makedirs(test_files_dir, exist_ok=True)
+                    with open(os.path.join(test_files_dir, "__init__.py"), "w") as f:
+                        f.write("")
+                    for filename, content in supp_data.items():
+                        with open(os.path.join(test_files_dir, filename), "w") as f:
                             f.write(content)
+                else:
+                    for filename, content in supp_data.items():
+                        for directory in [src_dir, tests_dir]:
+                            with open(os.path.join(directory, filename), "w") as f:
+                                f.write(content)
         conn.close()
 
         # 4. Write root README

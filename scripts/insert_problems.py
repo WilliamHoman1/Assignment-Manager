@@ -58,6 +58,8 @@ def sync_gitlab_problems(project_id):
         code_path = metadata.get("code")
         tests_path = metadata.get("unit_tests")
         supplemental_paths = metadata.get("supplemental_files", [])  # ← new
+        # Add this after supplemental_paths
+        use_test_files_package = int(metadata.get("use_test_files_package", False))
 
         def fetch_file(path, file_type):
             if not path:
@@ -86,8 +88,8 @@ def sync_gitlab_problems(project_id):
 
         cursor.execute("""
             INSERT OR REPLACE INTO problems
-            (id, title, topic, difficulty, language, instructions, unit_tests, src_code, position, supplemental_files)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (id, title, topic, difficulty, language, instructions, unit_tests, src_code, position, supplemental_files, use_test_files_package)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             problem_id,
             title,
@@ -98,7 +100,8 @@ def sync_gitlab_problems(project_id):
             unit_tests,
             src_code,
             position,
-            supplemental_json  # ← new
+            supplemental_json,
+            use_test_files_package  # ← new
         ))
 
         synced += 1
