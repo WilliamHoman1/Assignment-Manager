@@ -57,8 +57,7 @@ def sync_gitlab_problems(project_id):
         instructions_path = metadata.get("instructions")
         code_path = metadata.get("code")
         tests_path = metadata.get("unit_tests")
-        supplemental_paths = metadata.get("supplemental_files", [])  # ← new
-        # Add this after supplemental_paths
+        supplemental_paths = metadata.get("supplemental_files", [])
         use_test_files_package = int(metadata.get("use_test_files_package", False))
 
         def fetch_file(path, file_type):
@@ -75,7 +74,7 @@ def sync_gitlab_problems(project_id):
         src_code = fetch_file(code_path, "src")
         unit_tests = fetch_file(tests_path, "tests")
 
-        # Fetch supplemental file contents and store by filename ← new
+        # Fetch supplemental file contents and store by filename
         supplemental_contents = {}
         for path in supplemental_paths:
             filename = os.path.basename(path)
@@ -101,7 +100,7 @@ def sync_gitlab_problems(project_id):
             src_code,
             position,
             supplemental_json,
-            use_test_files_package  # ← new
+            use_test_files_package
         ))
 
         synced += 1
