@@ -164,10 +164,9 @@ Run the following command to install all required packages:
 If you wish to use your own credentials instead, rename .env.example
 to .env and fill in your own values:
 
-   GITLAB_TOKEN: GitLab → Settings → Access Tokens
-   GITLAB_PROJECT_ID: GitLab → Your Project → Settings → General
-
-   ANTHROPIC_API_KEY: https://console.anthropic.com
+   - GITLAB_TOKEN: GitLab → Settings → Access Tokens
+   - GITLAB_PROJECT_ID: GitLab → Your Project → Settings → General 
+   - ANTHROPIC_API_KEY: https://console.anthropic.com
 
 ---
 

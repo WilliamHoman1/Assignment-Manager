@@ -178,6 +178,30 @@ class AIScreen(Screen):
             else:
                 self.query_one("#build-btn", Button).disabled = False
                 self.add_message("ai", "No problem! Click 'View Assignment' to review and build when ready.")
+        # Handle create problem
+        elif action_type == "create_problem":
+            new_problem = action.get("problem")
+
+            if not new_problem:
+                self.add_message("ai", "Something went wrong — no problem data was returned.")
+                return
+
+            db = self.assistant.db
+
+            if db.problem_exists(new_problem["id"]):
+                self.add_message("ai", f"A problem with ID '{new_problem['id']}' already exists. Try asking again.")
+                return
+
+            try:
+                db.add_problem(new_problem)
+                if not hasattr(self.app, "selected_problems"):
+                    self.app.selected_problems = []
+                self.app.selected_problems.append(new_problem["id"])
+                self.query_one("#build-btn", Button).disabled = False
+                self.add_message("ai",
+                                 f"✓ '{new_problem['title']}' generated and added to your assignment! Click 'View Assignment' to review it.")
+            except Exception as e:
+                self.add_message("ai", f"Error saving problem: {str(e)}")
 
     async def _build_assignment(self, ps_number: int):
         """Trigger GitLab build directly from chat"""

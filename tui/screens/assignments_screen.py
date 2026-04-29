@@ -14,6 +14,7 @@ class AssignmentsScreen(Screen):
         self.table.add_columns("ID", "Title", "Action")
 
         problems = getattr(self.app, "selected_problems", [])
+
         db = DatabaseService()
 
         for pid in problems:
@@ -38,22 +39,27 @@ class AssignmentsScreen(Screen):
         yield Button("Return to Menu", id="menu")
 
     def on_data_table_cell_selected(self, event: DataTable.CellSelected):
-        """Allows for selecting and removing problems from assignment screen."""
-        # Handle removing problems
         row = self.table.get_row(event.cell_key.row_key)
         if not row:
             return
 
         problem_id = row[0]
-        action = row[2]
+        col = event.coordinate.column  # 0=ID, 1=Title, 2=Action
 
-        if action == "Remove":
+        if col == 2:  # Action column = Remove
             if problem_id in self.app.selected_problems:
                 self.app.selected_problems.remove(problem_id)
-            self.notify("Problem removed")
-            # refresh screen
+            self.notify(f"Removed {problem_id}")
             self.app.pop_screen()
             self.app.push_screen(AssignmentsScreen())
+
+        else:     # ID or Title column = View
+            from tui.screens.problem_preview import ProblemPreview
+            db = DatabaseService()
+            problem = db.get_problem(problem_id)
+            if problem:
+                self.app.push_screen(ProblemPreview(problem))
+
 
     async def on_button_pressed(self, event: Button.Pressed):
         """Handles each event for a button pressed on the assignment screen."""
