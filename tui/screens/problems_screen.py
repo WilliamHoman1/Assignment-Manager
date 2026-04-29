@@ -34,6 +34,7 @@ class ProblemsScreen(Screen):
             yield Button("Back", id="back")
 
     def on_data_table_row_highlighted(self, event: DataTable.RowHighlighted):
+        """Handles when something is highlighted."""
         row = self.table.get_row(event.row_key)
         if row:
             self.highlighted_problem_id = row[0]
@@ -80,7 +81,7 @@ class ProblemsScreen(Screen):
                 from tui.screens.assignments_screen import AssignmentsScreen
 
                 self.app.push_screen(AssignmentsScreen())
-                
+
         elif event.button.id == "remove":
             if self.highlighted_problem_id:
                 db = DatabaseService()
