@@ -83,6 +83,7 @@ class ProblemsScreen(Screen):
                 self.app.push_screen(AssignmentsScreen())
 
         elif event.button.id == "remove":
+            # Remove assignment from DB
             if self.highlighted_problem_id:
                 db = DatabaseService()
                 db.delete_problem(self.highlighted_problem_id)
