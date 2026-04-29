@@ -2,16 +2,34 @@
 -   Choose Problems --> Review Problem--> Bundle --> Create Assignment --> GitLab Project Created
 -   Detailed information below.
 
-<img width="968" height="624" alt="Screenshot 2026-03-10 at 10 45 26 PM" src="https://github.com/user-attachments/assets/bea6c9f8-d83b-4b0f-bb57-7af1e7a18467" />
-<img width="962" height="619" alt="Screenshot 2026-03-10 at 10 45 53 PM" src="https://github.com/user-attachments/assets/9501736f-9679-4221-90a1-e3e9cdc53632" />
-<img width="967" height="624" alt="Screenshot 2026-03-10 at 10 46 59 PM" src="https://github.com/user-attachments/assets/39780d37-3353-4568-887b-b65e7d304e0d" />
-<img width="1512" height="869" alt="Screenshot 2026-03-10 at 10 51 25 PM" src="https://github.com/user-attachments/assets/b137dd89-36fc-4f3f-8e8e-71920aa947c8" />
+Home Page
+<img width="1512" height="866" alt="Screenshot 2026-03-25 at 9 00 35 PM" src="https://github.com/user-attachments/assets/0159a447-e7ea-4672-8545-c1a5c6dac73c" />
+View Problems
+<img width="1512" height="869" alt="Screenshot 2026-03-25 at 9 07 45 PM" src="https://github.com/user-attachments/assets/0eee1b38-d70d-4670-99cd-f7416088a42e" />
+Review Problem Content
+<img width="1512" height="865" alt="Screenshot 2026-03-25 at 9 08 05 PM" src="https://github.com/user-attachments/assets/106b6246-ebc3-4cf1-b88c-4b69b161c655" />
+Add to assignment
+<img width="1512" height="862" alt="Screenshot 2026-03-25 at 9 09 13 PM" src="https://github.com/user-attachments/assets/3970c23c-4620-40fd-a540-bf7f80f099c8" />
+ALTERNATIVE - AI Chat BOT (Prompt)
+<img width="1512" height="863" alt="Screenshot 2026-03-25 at 9 09 43 PM" src="https://github.com/user-attachments/assets/7bf28346-9d59-443c-92d1-3c5e51be3ebd" />
+Problems Added
+<img width="1512" height="866" alt="Screenshot 2026-03-25 at 9 09 59 PM" src="https://github.com/user-attachments/assets/e0e8fbfd-0646-4e37-b0f7-f9f6a244caca" />
+Create assignment prompt
+<img width="1512" height="867" alt="Screenshot 2026-03-25 at 9 10 22 PM" src="https://github.com/user-attachments/assets/e84fdefe-e102-4a1b-b859-c62b1d5a7bdd" />
+Review or Publish
+<img width="1512" height="871" alt="Screenshot 2026-03-25 at 9 12 12 PM" src="https://github.com/user-attachments/assets/0781a20f-4594-43ec-8dc7-1be123f75ef4" />
+Built
+<img width="1512" height="868" alt="Screenshot 2026-03-25 at 9 16 09 PM" src="https://github.com/user-attachments/assets/81b0335e-7543-4cdb-82fa-66c716a694e9" />
+Assignment in GitLab
+<img width="1512" height="866" alt="Screenshot 2026-03-25 at 9 16 40 PM" src="https://github.com/user-attachments/assets/64899442-f176-42ec-8504-bfbb779b72cb" />
+
 
 
 
 # Current Progress
-Assignment manager lets user pick and match problems to bundle into assignment. Upon user choice, the assignments are sent to gitlab in their own project with repositories. These are then available and ready for students to clone to complete and commit back to GitLab.
+Added Claude AI by calling its API into my program, manager now has AI builder as well. The fundamentals are the user picks and matchs problems to bundle into an assignment. Upon user choice, the assignments are sent to gitlab in their own project with repositories. These are then available and ready for students to clone to complete and commit back to GitLab.
 
+-    Claude API Called
 -    Code organized using SOLID principles
 
 # Project Estimated Completion Date
