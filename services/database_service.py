@@ -4,6 +4,7 @@ DB_PATH = "data/assignments.db"
 
 
 class DatabaseService:
+    """Takes control of mechanics in the database."""
 
     def __init__(self):
         self.db_path = DB_PATH
