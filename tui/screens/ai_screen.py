@@ -117,7 +117,15 @@ class AIScreen(Screen):
 
     async def _get_ai_response(self, user_text: str):
         """AI response function"""
-        response = self.assistant.chat(user_text)
+        try:
+            response = self.assistant.chat(user_text)
+        except Exception as e:
+            try:
+                self.query_one("#thinking").remove()
+            except Exception:
+                pass
+            self.add_message("ai", f"Error: {str(e)}")
+            return
 
         try:
             self.query_one("#thinking").remove()

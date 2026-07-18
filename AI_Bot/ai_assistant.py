@@ -93,7 +93,7 @@ class AIAssistant:
         self.conversation_history.append({"role": "user", "content": user_message})
 
         response = self.client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-4-5",
             max_tokens=1024,
             system=system_prompt,
             messages=self.conversation_history
